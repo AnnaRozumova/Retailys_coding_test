@@ -6,6 +6,13 @@ run:
 lint:
 	pipenv run pylint src/
 
+type-check:
+	pipenv run mypy src/
+
+lint-all:
+	pipenv run pylint src/
+	pipenv run mypy src/
+
 test:
 	pipenv run pytest --cov=src --cov-config=.coveragerc --cov-report=term --cov-report=html tests/
 

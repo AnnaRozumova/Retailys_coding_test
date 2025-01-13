@@ -1,7 +1,7 @@
 [run]
 # Directories to measure coverage
 source = src
-branch = True  
+branch = True
 
 [report]
 # Exclude the following from the report:
