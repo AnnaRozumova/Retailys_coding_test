@@ -92,9 +92,9 @@
             // Get spare part names
             $("#btn-spare-parts").click(function() {
                 $.get("/get_spare_parts", function(data) {
-                    $("#spare-parts-list").empty();
-                    data.spare_parts.forEach(function(name) {
-                        $("#spare-parts-list").append(`<li>${name}</li>`);
+                    $("#spare-part-names-list").empty();
+                    data.spare_part_names.forEach(function(name) {
+                        $("#spare-part-names-list").append(`<li>${name}</li>`);
                     });
                 });
             });

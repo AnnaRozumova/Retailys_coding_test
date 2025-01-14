@@ -1,7 +1,7 @@
-.PHONY: run lint test coverage-report build format install-hooks install-env remove-env lock-env
+.PHONY: run lint test build format install-hooks install-env remove-env lock-env
 
 run:
-	pipenv run python src/main.py
+	pipenv run python -m src.main
 
 lint:
 	pipenv run pylint src/
@@ -14,10 +14,7 @@ lint-all:
 	pipenv run mypy src/
 
 test:
-	pipenv run pytest --cov=src --cov-config=.coveragerc --cov-report=term --cov-report=html tests/
-
-coverage-report:
-	xdg-open htmlcov/index.html || open htmlcov/index.html
+	PYTHONPATH=src pipenv run pytest tests/
 
 build:
 	docker build -t xml-webapp .
