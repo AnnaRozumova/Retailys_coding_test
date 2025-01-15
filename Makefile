@@ -1,7 +1,7 @@
-.PHONY: run lint test build format install-hooks install-env remove-env lock-env
+.PHONY: run lint test build-docker run-docker format install-hooks install-env remove-env lock-env
 
 run:
-	pipenv run python -m src.main
+	pipenv run python src/main.py
 
 lint:
 	pipenv run pylint src/
@@ -16,7 +16,7 @@ lint-all:
 test:
 	PYTHONPATH=src pipenv run pytest tests/
 
-build:
+build-docker:
 	docker build -t xml-webapp .
 
 run-docker:
