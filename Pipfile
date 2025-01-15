@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "*"
-pytest-cov = "*"
-coverage = "*"
 lxml = "*"
 flask = "*"
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.11"
