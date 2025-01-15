@@ -8,9 +8,6 @@ __pycache__/
 venv/
 .env/
 
-# Pipenv files
-Pipfile.lock
-
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
