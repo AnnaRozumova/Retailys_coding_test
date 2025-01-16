@@ -20,7 +20,10 @@ build-docker:
 	docker build -t xml-webapp .
 
 run-docker:
-	docker run -p 5000:5000 xml-webapp
+	docker-compose up -d
+
+remove-docker:
+	docker-compose down
 
 install-env:
 	PIPENV_VENV_IN_PROJECT=1 pipenv install --dev

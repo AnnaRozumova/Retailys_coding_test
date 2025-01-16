@@ -1,6 +1,6 @@
 import pytest
 from lxml import etree
-from xml_parser import XMLParser
+from xml_parser import ProductDetails
 from io import BytesIO
 
 # Sample XML data for testing
@@ -20,7 +20,7 @@ sample_xml = b"""
 @pytest.fixture
 def parser():
     xml_file = BytesIO(sample_xml)
-    xml_parser = XMLParser(xml_file)
+    xml_parser = ProductDetails(xml_file)
     return xml_parser
 
 def test_get_total_products(parser):

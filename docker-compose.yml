@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  app:
+    image: xml-webapp
+    container_name: xml-webapp-container
+    ports:
+      - "5000:5000"   
+    deploy:
+      resources:
+        limits:
+          memory: "1g"
+    restart: unless-stopped

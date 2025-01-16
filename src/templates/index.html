@@ -3,99 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Shop XML Parser</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .button-container {
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .output-container {
-            margin-top: 10px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .output-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .output-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .output-list li {
-            margin-bottom: 5px;
-        }
-    </style>
+    <title>XML Parser</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Link to external CSS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>E-Shop XML Parser</h1>
+    <h1>XML Parser Test</h1>
 
-    <div class="button-container">
-        <button id="btn-total-products">Get Total Products</button>
-        <button id="btn-product-names">Get Product Names</button>
-        <button id="btn-spare-parts">Get Spare Parts</button>
-    </div>
+    <div class="container">
+        <div class="box">
+            <button id="btn-total-products" class="action-btn">Get Total Products</button>
+            <div class="result-container" id="total-products-result">
+                <!-- Total products result will be displayed here -->
+            </div>
+        </div>
 
-    <!-- Outputs -->
-    <div class="output-container" id="output-total-products">
-        <p class="output-title">Total Products:</p>
-        <p id="total-products-result">Click the button to see the result.</p>
-    </div>
+        <div class="box">
+            <button id="btn-product-names" class="action-btn">Get Product Names</button>
+            <div class="result-container" id="product-names-result">
+                <!-- Product names result will be displayed here -->
+            </div>
+        </div>
 
-    <div class="output-container" id="output-product-names">
-        <p class="output-title">Product Names:</p>
-        <ul id="product-names-list" class="output-list"></ul>
-    </div>
-
-    <div class="output-container" id="output-spare-part-names">
-        <p class="output-title">Spare Part Names:</p>
-        <ul id="spare-part-names-list" class="output-list"></ul>
+        <div class="box">
+            <button id="btn-spare-parts" class="action-btn">Get Spare Parts</button>
+            <div class="result-container" id="spare-parts-result">
+                <!-- Spare parts result will be displayed here -->
+            </div>
+        </div>
     </div>
 
     <script>
         $(document).ready(function() {
-            // Get total products
+            // Fetch and display total products
             $("#btn-total-products").click(function() {
+                $("#total-products-result").empty(); // Clear previous result
                 $.get("/get_total_products", function(data) {
                     $("#total-products-result").text(`Total Products: ${data.total_products}`);
                 });
             });
 
-            // Get product names
+            // Fetch and display product names
             $("#btn-product-names").click(function() {
+                $("#product-names-result").empty(); // Clear previous result
                 $.get("/get_product_names", function(data) {
-                    $("#product-names-list").empty();
                     data.product_names.forEach(function(name) {
-                        $("#product-names-list").append(`<li>${name}</li>`);
+                        $("#product-names-result").append(`<p>${name}</p>`);
                     });
                 });
             });
 
-            // Get spare part names
+            // Fetch and display spare parts grouped by item name
             $("#btn-spare-parts").click(function() {
+                $("#spare-parts-result").empty(); // Clear previous result
                 $.get("/get_spare_parts", function(data) {
-                    $("#spare-part-names-list").empty();
-                    data.spare_part_names.forEach(function(name) {
-                        $("#spare-part-names-list").append(`<li>${name}</li>`);
-                    });
+                    for (const [itemName, spareParts] of Object.entries(data)) {
+                        $("#spare-parts-result").append(`<h3>${itemName}</h3>`);
+                        spareParts.forEach(function(part) {
+                            $("#spare-parts-result").append(`<p style="margin-left: 20px;">${part}</p>`);
+                        });
+                    }
                 });
             });
         });
