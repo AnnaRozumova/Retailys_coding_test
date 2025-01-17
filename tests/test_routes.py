@@ -1,42 +1,53 @@
 import os
 import pytest
 from flask import Flask
-from routes import bp
+from src.routes import bp
 
 @pytest.fixture
-def flask_app_fixture():
-    app = Flask(__name__, template_folder=os.path.abspath("tests/templates"))
+def flask_app():
+    # Setting up Flask application with the correct paths for templates and static files
+    app = Flask(__name__, 
+                template_folder=os.path.join(os.path.dirname(__file__), "../src/templates"),
+                static_folder=os.path.join(os.path.dirname(__file__), "../src/static"))
     app.register_blueprint(bp)
     app.config["TESTING"] = True
     return app
 
 @pytest.fixture
-def flask_test_client_fixture(flask_app_fixture):
-    return flask_app_fixture.test_client()
+def client(flask_app):
+    return flask_app.test_client()
 
-def test_index_returns_200_status_code(flask_test_client_fixture):
-    response = flask_test_client_fixture.get('/')
+def test_index(client):
+    response = client.get('/')
     assert response.status_code == 200
+    # Verify important content in the updated index.html
+    assert b"<h1>XML Parser Test</h1>" in response.data
+    assert b'<link rel="stylesheet" href="/static/style.css">' in response.data
+    assert b'<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>' in response.data
 
-def test_get_total_products_returns_json(flask_test_client_fixture):
-    response = flask_test_client_fixture.get('/get_total_products')
+def test_get_total_products(client):
+    response = client.get('/get_total_products')
     assert response.status_code == 200
     data = response.get_json()
     assert "total_products" in data
+    assert isinstance(data["total_products"], int)
 
-def test_get_product_names_returns_list_of_names(flask_test_client_fixture):
-    response = flask_test_client_fixture.get('/get_product_names')
+def test_get_product_names(client):
+    response = client.get('/get_product_names')
     assert response.status_code == 200
     data = response.get_json()
     assert "product_names" in data
     assert isinstance(data["product_names"], list)
 
-def test_get_spare_parts_returns_list_or_404(flask_test_client_fixture):
-    response = flask_test_client_fixture.get('/get_spare_parts')
-    assert response.status_code in [200, 404]  # 200 if parts available, 404 otherwise
+def test_get_spare_parts(client):
+    response = client.get('/get_spare_parts')
+    assert response.status_code in [200, 404]
     data = response.get_json()
     if response.status_code == 200:
-        assert "spare_part_names" in data
-        assert isinstance(data["spare_part_names"], list)
+        assert isinstance(data, dict)  # Check if the response is a dictionary
+        for key, value in data.items():
+            assert isinstance(key, str)  # Item name
+            assert isinstance(value, list)  # List of spare parts
     else:
+        assert "message" in data
         assert data["message"] == "No spare parts found"

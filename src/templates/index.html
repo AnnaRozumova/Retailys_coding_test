@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XML Parser</title>
-    <link rel="stylesheet" href="/static/style.css"> <!-- Link to external CSS -->
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -12,21 +12,21 @@
 
     <div class="container">
         <div class="box">
-            <button id="btn-total-products" class="action-btn">Get Total Products</button>
+            <button id="btn-total-products" class="action-btn">Total Products</button>
             <div class="result-container" id="total-products-result">
                 <!-- Total products result will be displayed here -->
             </div>
         </div>
 
         <div class="box">
-            <button id="btn-product-names" class="action-btn">Get Product Names</button>
+            <button id="btn-product-names" class="action-btn">Product Names</button>
             <div class="result-container" id="product-names-result">
                 <!-- Product names result will be displayed here -->
             </div>
         </div>
 
         <div class="box">
-            <button id="btn-spare-parts" class="action-btn">Get Spare Parts</button>
+            <button id="btn-spare-parts" class="action-btn">Spare Parts of Products</button>
             <div class="result-container" id="spare-parts-result">
                 <!-- Spare parts result will be displayed here -->
             </div>
@@ -35,17 +35,15 @@
 
     <script>
         $(document).ready(function() {
-            // Fetch and display total products
             $("#btn-total-products").click(function() {
-                $("#total-products-result").empty(); // Clear previous result
+                $("#total-products-result").empty(); 
                 $.get("/get_total_products", function(data) {
                     $("#total-products-result").text(`Total Products: ${data.total_products}`);
                 });
             });
 
-            // Fetch and display product names
             $("#btn-product-names").click(function() {
-                $("#product-names-result").empty(); // Clear previous result
+                $("#product-names-result").empty(); // 
                 $.get("/get_product_names", function(data) {
                     data.product_names.forEach(function(name) {
                         $("#product-names-result").append(`<p>${name}</p>`);
@@ -53,9 +51,8 @@
                 });
             });
 
-            // Fetch and display spare parts grouped by item name
             $("#btn-spare-parts").click(function() {
-                $("#spare-parts-result").empty(); // Clear previous result
+                $("#spare-parts-result").empty(); // 
                 $.get("/get_spare_parts", function(data) {
                     for (const [itemName, spareParts] of Object.entries(data)) {
                         $("#spare-parts-result").append(`<h3>${itemName}</h3>`);

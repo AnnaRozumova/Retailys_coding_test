@@ -1,0 +1,10 @@
+<catalog>
+    <item name="Product A" />
+    <item name="Product B" />
+    <category type="parts">
+        <part itemName="Engine">
+            <item name="Engine Block" />
+            <item name="Cylinder Head" />
+        </part>
+    </category>
+</catalog>
