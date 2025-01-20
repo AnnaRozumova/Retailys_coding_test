@@ -17,10 +17,6 @@ jobs:
 
       - name: Push to Render
         env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          curl -X POST -H "Authorization: Bearer $RENDER_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{"serviceId":"'"$RENDER_SERVICE_ID"'"}' \
-          https://api.render.com/deploys
+          curl "$deploy_url"
