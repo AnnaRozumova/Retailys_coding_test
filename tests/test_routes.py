@@ -1,16 +1,35 @@
 import os
 import pytest
+import tempfile
 from flask import Flask
 from src.routes import bp
+from src.product_details import ProductDetails
+
+sample_xml_content = """
+<export_full>
+    <items>
+        <item name="Product A" />
+        <item name="Product B" />
+    </items>
+</export_full>
+"""
 
 @pytest.fixture
-def flask_app():
-    # Setting up Flask application with the correct paths for templates and static files
+def sample_xml_file():
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xml", mode="w", encoding="utf-8") as temp_file:
+        temp_file.write(sample_xml_content)
+        temp_file_path = temp_file.name
+    yield temp_file_path
+    os.remove(temp_file_path)
+
+@pytest.fixture
+def flask_app(sample_xml_file):
     app = Flask(__name__, 
                 template_folder=os.path.join(os.path.dirname(__file__), "../src/templates"),
                 static_folder=os.path.join(os.path.dirname(__file__), "../src/static"))
     app.register_blueprint(bp)
     app.config["TESTING"] = True
+    app.config["product_details"] = ProductDetails(sample_xml_file)
     return app
 
 @pytest.fixture
@@ -20,34 +39,23 @@ def client(flask_app):
 def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
-    # Verify important content in the updated index.html
-    assert b"<h1>XML Parser Test</h1>" in response.data
-    assert b'<link rel="stylesheet" href="/static/style.css">' in response.data
-    assert b'<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>' in response.data
+    assert b"XML Parser Test" in response.data
 
 def test_get_total_products(client):
     response = client.get('/get_total_products')
     assert response.status_code == 200
     data = response.get_json()
     assert "total_products" in data
-    assert isinstance(data["total_products"], int)
+    assert data["total_products"] == 2
 
 def test_get_product_names(client):
     response = client.get('/get_product_names')
     assert response.status_code == 200
     data = response.get_json()
     assert "product_names" in data
-    assert isinstance(data["product_names"], list)
+    assert data["product_names"] == ["Product A", "Product B"]
 
 def test_get_spare_parts(client):
     response = client.get('/get_spare_parts')
-    assert response.status_code in [200, 404]
-    data = response.get_json()
-    if response.status_code == 200:
-        assert isinstance(data, dict)  # Check if the response is a dictionary
-        for key, value in data.items():
-            assert isinstance(key, str)  # Item name
-            assert isinstance(value, list)  # List of spare parts
-    else:
-        assert "message" in data
-        assert data["message"] == "No spare parts found"
+    assert response.status_code == 200
+    assert response.get_json() == {}

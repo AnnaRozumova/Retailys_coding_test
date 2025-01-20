@@ -5,7 +5,9 @@ services:
     image: xml-webapp
     container_name: xml-webapp-container
     ports:
-      - "5000:5000"   
+      - "5000:5000"  
+    env_file:
+      - .env 
     deploy:
       resources:
         limits:

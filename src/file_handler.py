@@ -7,15 +7,9 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-
-ZIP_URL = "https://www.retailys.cz/wp-content/uploads/astra_export_xml.zip"
-DOWNLOAD_DIR = "./data"
-XML_FILENAME = "export_full.xml"
-FILEPATH = os.path(DOWNLOAD_DIR, XML_FILENAME)
-
 class FileHandler:
     '''Handles downloading and extracting files.'''
-    def __init__(self, download_dir=DOWNLOAD_DIR, extract_dir=DOWNLOAD_DIR):
+    def __init__(self, download_dir="./data", extract_dir="./data"):
         self.download_dir = download_dir
         self.extract_dir = extract_dir
 
@@ -36,7 +30,7 @@ class FileHandler:
         logging.info(f"File downloaded to {file_path}")
         return file_path
 
-    def extract_file(self, zip_path, target_filename=XML_FILENAME):
+    def extract_file(self, zip_path, target_filename):
         '''Extracts a specific file from a zip archive.'''
         if not os.path.exists(self.extract_dir):
             os.makedirs(self.extract_dir)
