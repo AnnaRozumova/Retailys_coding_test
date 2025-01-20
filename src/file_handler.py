@@ -1,3 +1,4 @@
+'''Module to handle download and extract of zipfile.'''
 import os
 import zipfile
 import logging
@@ -19,7 +20,7 @@ class FileHandler:
             os.makedirs(self.download_dir)
 
         file_path = os.path.join(self.download_dir, filename)
-        logging.info(f"Downloading file from {url}...")
+        logging.info("Downloading file from %s", url)
         response = requests.get(url, stream=True)
         response.raise_for_status()
 
@@ -27,7 +28,7 @@ class FileHandler:
             for chunk in response.iter_content(chunk_size=8192):
                 file.write(chunk)
 
-        logging.info(f"File downloaded to {file_path}")
+        logging.info("File downloaded to %s", file_path)
         return file_path
 
     def extract_file(self, zip_path, target_filename):
@@ -39,5 +40,5 @@ class FileHandler:
             zip_ref.extract(target_filename, self.extract_dir)
 
         extracted_path = os.path.join(self.extract_dir, target_filename)
-        logging.info(f"Extracted file to {extracted_path}")
+        logging.info("Extracted file to %s", extracted_path)
         return extracted_path

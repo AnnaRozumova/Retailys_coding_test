@@ -1,10 +1,10 @@
 '''Main entry point for the Flask application.'''
 import os
 from flask import Flask
+from dotenv import load_dotenv
 from routes import bp
 from product_details import ProductDetails
 from file_handler import FileHandler
-from dotenv import load_dotenv
 
 load_dotenv()
 app = Flask(__name__)
